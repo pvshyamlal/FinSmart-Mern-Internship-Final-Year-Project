@@ -1,0 +1,293 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f6d365, #fda085); /* Gradient for the body */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .inputbox {
+            position: relative;
+            width: 196px;
+            }
+
+            .inputbox input {
+            position: relative;
+            width: 100%;
+            padding: 20px 10px 10px;
+            background: transparent;
+            outline: none;
+            box-shadow: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1em;
+            letter-spacing: 0.05em;
+            transition: 0.5s;
+            z-index: 10;
+            }
+
+            .inputbox span {
+            position: absolute;
+            left: 0;
+            padding: 20px 10px 10px;
+            font-size: 1em;
+            color: #8f8f8f;
+            letter-spacing: 00.05em;
+            transition: 0.5s;
+            pointer-events: none;
+            }
+
+            .inputbox input:valid ~span,
+            .inputbox input:focus ~span {
+            color: #45f3ff;
+            transform: translateX(-10px) translateY(-34px);
+            font-size: 0,75em;
+            }
+
+            .inputbox i {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 2px;
+            background: #0056b3;
+            border-radius: 4px;
+            transition: 0.5s;
+            pointer-events: none;
+            z-index: 9;
+            }
+
+            .inputbox input:valid ~i,
+            .inputbox input:focus ~i {
+            height: 44px;
+            }
+
+        .form-container {
+            background: linear-gradient(135deg, #a1defd, #c2e9fb); /* Cool calming gradient */
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        .form-container h1 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+            font-weight: bold;
+            transition: box-shadow 10s ease; /* Smooth transition for the glow effect */
+        }
+
+        .form-container h1:hover {
+            text-shadow: 
+            0 0 10px #02f90e, 
+            0 0 40px #fa1010, 
+            0 0 75px #dcf902; /* Green glow effect */
+            color: #ffffff; /* Change text color to match the glow */
+        }
+
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-container button {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .form-container button:hover {
+            background-color: #0056b3;
+        }
+
+        .top-right-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .top-right-button a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        button {
+            outline: none;
+            cursor: pointer;
+            border: none;
+            padding: 0.9rem 2rem;
+            margin: 0;
+            font-family: inherit;
+            font-size: inherit;
+            position: relative;
+            display: inline-block;
+            letter-spacing: 0.05rem;
+            font-weight: 700;
+            font-size: 17px;
+            border-radius: 500px;
+            overflow: hidden;
+            background: #66ff66;
+            color: ghostwhite;
+        }
+
+        button span {
+            position: relative;
+            z-index: 10;
+            transition: color 0.4s;
+        }
+
+        button:hover span {
+            color: black;
+        }
+
+        button::before,
+        button::after {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        button::before {
+            content: "";
+            background: #000;
+            width: 120%;
+            left: -10%;
+            transform: skew(30deg);
+            transition: transform 0.4s cubic-bezier(0.3, 1, 0.8, 1);
+        }
+
+        button:hover::before {
+            transform: translate3d(100%, 0, 0);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .password-toggle {
+            cursor: pointer;
+            position: absolute;
+            left: 200px;
+            top: 17%;
+        }
+
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-right-button">
+        <a href="{% url 'home' %}">Home</a>
+    </div>
+
+    <div class="form-container">
+        <h1>Login</h1>
+
+        <!-- Messages for errors and success -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="{% if message.tags %}{{ message.tags }}-message{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            
+
+            <div class="inputbox">
+                <input required="required" type="text" name="username">
+                <span for="username">Username</span>
+                <i></i>
+            </div><br>
+            <!-- Username Input -->
+
+            <div class="inputbox">
+                <input required="required" type="password" name="password">
+                <span for="password">Password</span>
+                <i></i>
+            </div><br><br><br>
+
+            <button type="submit"><span>Login</span></button>
+        </form>
+
+        <div class="footer">
+            <p>Don't have an account? <a href="{% url 'register' %}">Register</a></p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const togglePassword = document.getElementById('toggle-password-login');
+            const passwordInput = document.querySelector('input[name="password"]');
+
+            togglePassword.addEventListener('click', function () {
+                // Toggle password visibility
+                if (passwordInput.type === "password") {
+                    passwordInput.type = "text";
+                    togglePassword.textContent = "👁️👁️";  // Change icon
+                } else {
+                    passwordInput.type = "password";
+                    togglePassword.textContent = "🙈";  // Change icon
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
